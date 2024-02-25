@@ -5,7 +5,7 @@ This module provides two classes: `LMString` and `LMRecordStrings`.
 
 - `LMString` is a subclass of Python's built-in string class that overides the `format` method to provide more informative feedback about missing formatting arguments.
 
-- `LMRecordStrings` stores multiple string records and formats them according to the input text conversations.
+- `LMRecordStrings` stores multiple string records and formats them according to the input text conversations. You can still format messages after wrapped in a collection, and you have a guarantee over the roles sequence: system (optional), user, assistant, user, assistant,...
 
 # Usage
 
