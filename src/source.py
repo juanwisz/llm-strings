@@ -42,24 +42,25 @@ class LMRecordStrings:
     def __matmul__(self, other):
         if isinstance(other, LMRecordStrings):
             if self.records and other.records:
-                # Check if the last record of the first instance and the first record of the second instance have the same role
+                # Merge system messages and append other records, adjusting roles as needed.
                 if self.records[-1]['role'] == other.records[0]['role']:
+                    # If the last record of 'self' and the first record of 'other' have the same role, merge their content
                     self.records[-1]['content'] += " " + other.records[0]['content']
+                    # Then append the rest of the records from 'other'
                     self.records += other.records[1:]
                 else:
+                    # If the roles are different, simply append all records from 'other'
                     self.records += other.records
             elif other.records:
+                # If 'self' has no records, just take all records from 'other'
                 self.records = other.records
         elif isinstance(other, str):
-            next_role = 'system' if not self.records else ('user' if self.records[-1]['role'] == 'assistant' else 'assistant')
-            # Check if the incoming string is an LMString with missing args
-            if isinstance(other, LMString) and other._missing_args:
-                # If there are missing args, raise an error as the string requires formatting
-                raise ValueError("LMString with missing args cannot be directly concatenated. Please format the string before concatenation.")
+            # Determine the next role based on the last record in 'self'
+            next_role = 'system' if not self.records else ('assistant' if self.records[-1]['role'] == 'user' else 'user')
+            # Append a new record with the determined role and the string content
             self.records.append({'role': next_role, 'content': other})
         else:
             raise TypeError("Unsupported type for composition. Must be LMRecordStrings or str.")
-        return self
 
     def __str__(self):
         border_width = 100
