@@ -40,12 +40,16 @@ def test_lmrecord_str(sample_lmrecord):
     assert "Hello, {name}!" in representation
     assert "┌" in representation and "└" in representation  # Check borders are present.
   
-def test_lmrecord_formatting(sample_lmrecord):
-    sample_lmrecord.format(0, name="World")
-    assert "Hello, World!" in sample_lmrecord.records[0]['content']
+def test_successful_lmrecord_formatting(sample_lmrecord):
+    # Test successful formatting
+    formatted_lmrecord = sample_lmrecord.format(0, name="World")
+    assert "Hello, World!" in formatted_lmrecord.records[0]['content'], "The formatting did not apply as expected."
 
-    with pytest.raises(IndexError):
+def test_lmrecord_formatting_with_out_of_bounds_index(sample_lmrecord):
+    # Test formatting with an out-of-bounds index, expecting an IndexError
+    with pytest.raises(IndexError) as exc_info:
         sample_lmrecord.format(100, name="Out of bounds")
+        
 @pytest.fixture
 def simple_lmstring():
     return LMString("Simple message")
