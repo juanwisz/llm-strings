@@ -42,16 +42,20 @@ class LMRecordStrings:
     def __matmul__(self, other):
         if isinstance(other, LMRecordStrings):
             if self.records and other.records:
-                self.records[0]['content'] += " " + other.records[0]['content']
-                self.records += other.records[1:]
+                # Check if the last record of the first instance and the first record of the second instance have the same role
+                if self.records[-1]['role'] == other.records[0]['role']:
+                    self.records[-1]['content'] += " " + other.records[0]['content']
+                    self.records += other.records[1:]
+                else:
+                    self.records += other.records
             elif other.records:
                 self.records = other.records
         elif isinstance(other, str):
-            if not isinstance(other, LMString):
-                field_names = [field[1] for field in string.Formatter().parse(other)]
-                if len(field_names)>0 and field_names[0]:
-                    raise ValueError("Raw strings cannot have args or kwargs. Please use LMStrings for compositions with formatting when composing."+str(field_names))
-            next_role = 'system' if not self.records else ('assistant' if self.records[-1]['role'] == 'user' else 'user')
+            next_role = 'system' if not self.records else ('user' if self.records[-1]['role'] == 'assistant' else 'assistant')
+            # Check if the incoming string is an LMString with missing args
+            if isinstance(other, LMString) and other._missing_args:
+                # If there are missing args, raise an error as the string requires formatting
+                raise ValueError("LMString with missing args cannot be directly concatenated. Please format the string before concatenation.")
             self.records.append({'role': next_role, 'content': other})
         else:
             raise TypeError("Unsupported type for composition. Must be LMRecordStrings or str.")
