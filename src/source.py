@@ -61,6 +61,7 @@ class LMRecordStrings:
             self.records.append({'role': next_role, 'content': other})
         else:
             raise TypeError("Unsupported type for composition. Must be LMRecordStrings or str.")
+        return self
 
     def __str__(self):
         border_width = 100
