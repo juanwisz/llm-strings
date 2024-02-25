@@ -51,7 +51,7 @@ class LMRecordStrings:
                 field_names = [field[1] for field in string.Formatter().parse(other)]
                 if len(field_names)>0 and field_names[0]:
                     raise ValueError("Raw strings cannot have args or kwargs. Please use LMStrings for compositions with formatting when composing."+str(field_names))
-            next_role = 'system' if not self.records else ('user' if self.records[-1]['role'] == 'assistant' else 'assistant')
+            next_role = 'system' if not self.records else ('assistant' if self.records[-1]['role'] == 'user' else 'user')
             self.records.append({'role': next_role, 'content': other})
         else:
             raise TypeError("Unsupported type for composition. Must be LMRecordStrings or str.")
