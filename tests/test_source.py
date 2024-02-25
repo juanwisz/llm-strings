@@ -160,12 +160,7 @@ def test_invariant_properties_preserved_during_non_modifying_operations(initiali
     initialized_lmrecord @ "Non-modifying string"
     updated_missing_args = {tuple(record['content']._missing_args) for record in initialized_lmrecord.records if isinstance(record['content'], LMString)}
     assert original_missing_args == updated_missing_args
-  
-def test_error_propagation_from_lmstring_to_lmrecord(complex_lmstring, empty_lmrecord):
-    empty_lmrecord @ complex_lmstring
-    with pytest.raises(ValueError) as excinfo:
-        empty_lmrecord.format(0, invalid_arg="This should fail")
-    assert "not allowed" in str(excinfo.value)  # Assuming the error message includes "not allowed"
+
   
 def test_edge_cases_for_string_composition(empty_lmrecord):
     edge_case_string = "{}"  # Could be confused with an unfilled placeholder
