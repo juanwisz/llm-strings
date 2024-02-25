@@ -1,3 +1,4 @@
+import pytest
 from source import LMString, LMRecordStrings
 
 @pytest.fixture
