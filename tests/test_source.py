@@ -158,7 +158,7 @@ def test_formatting_with_extra_unused_arguments(complex_lmstring):
 def test_invariant_properties_preserved_during_non_modifying_operations(initialized_lmrecord):
     original_missing_args = {tuple(record['content']._missing_args) for record in initialized_lmrecord.records if isinstance(record['content'], LMString)}
     initialized_lmrecord @ "Non-modifying string"
-    updated_missing_args = {record['content']._missing_args for record in initialized_lmrecord.records if isinstance(record['content'], LMString)}
+    updated_missing_args = {tuple(record['content']._missing_args) for record in initialized_lmrecord.records if isinstance(record['content'], LMString)}
     assert original_missing_args == updated_missing_args
   
 def test_error_propagation_from_lmstring_to_lmrecord(complex_lmstring, empty_lmrecord):
