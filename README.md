@@ -105,3 +105,99 @@ This would output:
 │ 2. Assistant: How are you?                                                                                │
 └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+### More examples
+
+#### Optional[System],(User,Asisstant)*n invariant:
+
+```python
+# Initializing a conversation with an opening message
+conversation = LMRecordStrings() @ "Hello, {name}. How can I assist you today?"
+
+# Adding more records to the conversation
+conversation @ "I need assistance with {topic}." @ "Certainly, what specific aspect of {topic} are you interested in?"
+
+# Formatting the first record with the user's name
+conversation = conversation.format(0, name="Alice")
+
+# Formatting the second record (user's message) with the topic
+conversation = conversation.format(1, topic="Python programming")
+
+# Formatting the third record (assistant's message) with the same topic
+conversation = conversation.format(2, topic="Python programming")
+
+# Adding a user reply to the assistant's question
+conversation @ "{aspect} of Python programming sounds challenging."
+
+# Formatting the fourth record (user's message) with the specific aspect
+conversation = conversation.format(3, aspect="asynchronous code execution")
+
+# Let's add the assistant's final message
+conversation @ "I can help you understand {concept} with some examples and explanations."
+
+# Formatting the fifth record (assistant's message) with the specific concept
+conversation = conversation.format(4, concept="asynchronous code execution")
+
+# Print the entire conversation
+print(conversation)
+```
+
+This will produce an output representing a back-and-forth conversation between the user and the assistant, with roles correctly alternating and messages formatted based on the arguments provided:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 0. System: ***  Hello, Alice. How can I assist you today? ***                                             │
+│------------------------------------------------------------------------------------------------------------│
+│ 1. User: I need assistance with Python programming.                                                       │
+│------------------------------------------------------------------------------------------------------------│
+│ 2. Assistant: Certainly, what specific aspect of Python programming are you interested in?                │
+│------------------------------------------------------------------------------------------------------------│
+│ 3. User: Asynchronous code execution of Python programming sounds challenging.                            │
+│------------------------------------------------------------------------------------------------------------│
+│ 4. Assistant: I can help you understand asynchronous code execution with some examples and explanations.  │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### V-Formatting
+```python
+# Initializing a conversation with an opening message
+conversation = LMRecordStrings() @ "Hello, {name}. How can I assist you today?"
+
+# Adding more records to the conversation
+conversation @ "I need assistance with {topic}." @ "Certainly, what specific aspect of {topic} are you interested in?"
+
+# Adding a user reply to the assistant's question
+conversation @ "{aspect} of {topic} sounds challenging."
+
+# Let's add the assistant's final message
+conversation @ "I can help you understand {concept} with some examples and explanations."
+
+# Now, we use vformat to apply the formatting arguments to all records
+formatted_conversation = conversation.vformat(
+    name="Alice",
+    topic="Python programming",
+    aspect="asynchronous code execution",
+    concept="asynchronous code execution"
+)
+
+# Print the fully formatted conversation
+print(formatted_conversation)
+```
+
+This will produce an output similar to the one before, but this time we are formatting all the records in one go at the end, using the `vformat` method:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 0. System: ***  Hello, Alice. How can I assist you today? ***                                             │
+│------------------------------------------------------------------------------------------------------------│
+│ 1. User: I need assistance with Python programming.                                                       │
+│------------------------------------------------------------------------------------------------------------│
+│ 2. Assistant: Certainly, what specific aspect of Python programming are you interested in?                │
+│------------------------------------------------------------------------------------------------------------│
+│ 3. User: Asynchronous code execution of Python programming sounds challenging.                            │
+│------------------------------------------------------------------------------------------------------------│
+│ 4. Assistant: I can help you understand asynchronous code execution with some examples and explanations.  │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+The `vformat` method is particularly useful when you have multiple records that require similar arguments, and you want to apply the formatting in a single step. It streamlines the process and makes the code cleaner and more concise, especially when dealing with lengthy conversations.
