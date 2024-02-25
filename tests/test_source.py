@@ -1,5 +1,5 @@
 import pytest
-from source import LMString, LMRecordStrings
+from llm_strings.source import LMString, LMRecordStrings
 
 @pytest.fixture
 def sample_lmstring():
