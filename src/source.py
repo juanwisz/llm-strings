@@ -42,6 +42,7 @@ class LMRecordStrings:
     def __matmul__(self, other):
         if isinstance(other, LMRecordStrings):
             if self.records and other.records:
+                self.records[0]['content'] = self.records[0]['content'] + other.records[0]['content']
                 # Merge system messages and append other records, adjusting roles as needed.
                 if self.records[-1]['role'] == other.records[0]['role']:
                     # If the last record of 'self' and the first record of 'other' have the same role, merge their content
